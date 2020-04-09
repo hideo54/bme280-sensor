@@ -17,6 +17,8 @@ class BME280 {
     this.i2cBus = i2c.openSync(this.i2cBusNo);
     this.i2cAddress = (options && options.hasOwnProperty('i2cAddress')) ? options.i2cAddress : BME280.BME280_DEFAULT_I2C_ADDRESS();
 
+    this.outputsInfo = (options && typeof options.outputsInfo === 'boolean') ? options.outputsInfo : true;
+
     this.I2C_ADDRESS_B   = 0x76;
     this.I2C_ADDRESS_A   = 0x77;
     this.CHIP_ID         = 0x58;
@@ -71,7 +73,9 @@ class BME280 {
           }
 
           else {
-            console.log(`Found BMx280 chip ID 0x${chipId.toString(16)} on bus i2c-${this.i2cBusNo}, address 0x${this.i2cAddress.toString(16)}`);
+            if (this.outputsInfo) {
+              console.log(`Found BMx280 chip ID 0x${chipId.toString(16)} on bus i2c-${this.i2cBusNo}, address 0x${this.i2cAddress.toString(16)}`);
+            }
             this.loadCalibration((err) => {
               if(err) {
                 return reject(err);
